@@ -1,6 +1,6 @@
 import { File, Home, Upload } from "lucide-react"
 
-import { NavUser } from "@/components/nav-user"
+import { NavUser } from "@/components/NavUser"
 import {
   Sidebar,
   SidebarContent,

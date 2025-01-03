@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar.tsx"
+import { AppSidebar } from "@/components/AppSidebar"
 import {
   SidebarInset,
   SidebarProvider,

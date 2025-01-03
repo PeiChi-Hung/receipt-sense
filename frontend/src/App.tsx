@@ -1,4 +1,4 @@
-import { MonthlyExp } from "@/components/dashboard/monthlyExp"
+import { MonthlyExp } from "@/components/dashboard/MonthlyExp"
 
 export default function App() {
   return (
