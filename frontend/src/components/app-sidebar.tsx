@@ -1,5 +1,6 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { File, Home, Upload } from "lucide-react"
 
+import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavUser } from "@/components/nav-user"
 
 const data = {
   user: {
@@ -21,7 +21,7 @@ const data = {
   },
 }
 
-// Menu items.
+// Menu items
 const items = [
   {
     title: "Home",
@@ -29,24 +29,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
+    title: "Upload",
     url: "#",
-    icon: Inbox,
+    icon: Upload,
   },
   {
-    title: "Calendar",
+    title: "Manual Input",
     url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    icon: File,
   },
 ]
 
