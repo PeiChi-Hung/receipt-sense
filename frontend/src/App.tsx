@@ -1,10 +1,8 @@
-import { MonthlyExp } from "@/components/dashboard/MonthlyExp";
-import Transactions from "./components/dashboard/Transactions";
 import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { Route, Routes } from "react-router";
 import Dashboard from "@/components/dashboard/Dashboard";
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import Upload from "@/components/upload/Upload";
+import { Route, Routes } from "react-router";
 
 export default function App() {
   return (

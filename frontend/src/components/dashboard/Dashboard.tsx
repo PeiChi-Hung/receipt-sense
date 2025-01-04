@@ -1,4 +1,3 @@
-import React from "react";
 import { MonthlyExp } from "./MonthlyExp";
 import Transactions from "./Transactions";
 
