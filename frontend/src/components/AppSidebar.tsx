@@ -1,6 +1,7 @@
-import { File, Home, Upload } from "lucide-react"
+import { FileUp, Home } from "lucide-react";
 
-import { NavUser } from "@/components/NavUser"
+import App from "@/App";
+import { NavUser } from "@/components/NavUser";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +12,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import Upload from "@/components/upload/Upload";
+import { Link } from "react-router";
 
 const data = {
   user: {
@@ -19,26 +22,28 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-}
+};
 
 // Menu items
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
+    element: <App />,
   },
   {
     title: "Upload",
-    url: "#",
-    icon: Upload,
+    url: "/upload",
+    icon: FileUp,
+    element: <Upload />,
   },
-  {
-    title: "Manual Input",
-    url: "#",
-    icon: File,
-  },
-]
+  // {
+  //   title: "Input",
+  //   url: "/input",
+  //   icon: File,
+  // },
+];
 
 export function AppSidebar() {
   return (
@@ -51,10 +56,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -66,5 +71,5 @@ export function AppSidebar() {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
