@@ -1,8 +1,9 @@
 import { AppSidebar } from "@/components/AppSidebar";
-import Dashboard from "@/components/dashboard/Dashboard";
+import Dashboard from "@/pages/dashboard/Dashboard";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import Upload from "@/components/upload/Upload";
+import Upload from "@/pages/upload/Upload";
 import { Route, Routes } from "react-router";
+import Input from "@/pages/input/Input";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/input" element={<Input />} />
         </Routes>
       </SidebarInset>
     </>
