@@ -3,7 +3,14 @@ from fastapi.responses import JSONResponse
 from PIL import Image
 from io import BytesIO
 
-from src.utils.ocr_service import generateOutputJson, load_model
+import numpy as np
+
+from src.utils.ocr_service import (
+    cleanJsonOutput,
+    generateOutputJson,
+    loadModel,
+    paddleScan,
+)
 
 
 app = FastAPI()
@@ -20,9 +27,15 @@ async def create_upload_image(file: UploadFile):
     contents = await file.read()
 
     # Create a BytesIO object to work with PIL
-    input = Image.open(BytesIO(contents))
+    input = Image.open(BytesIO(contents)).convert("RGB")
+
+    input_nparray = np.array(input)
+    receipt_texts = paddleScan(input_nparray)
 
     # Generate JSON with finetuned donut model
-    processor, model = load_model()
+    processor, model = loadModel()
     invoice_json = generateOutputJson(processor, model, input)
-    return invoice_json
+
+    # Clean JSON output
+    cleaned_json = cleanJsonOutput(invoice_json, receipt_texts)
+    return cleaned_json
