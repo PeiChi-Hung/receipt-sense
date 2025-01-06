@@ -1,6 +1,5 @@
-import { FileUp, Home } from "lucide-react";
+import { File, FileUp, Home } from "lucide-react";
 
-import App from "@/App";
 import { NavUser } from "@/components/NavUser";
 import {
   Sidebar,
@@ -13,7 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Upload from "@/components/upload/Upload";
 import { Link } from "react-router";
 
 const data = {
@@ -30,19 +28,17 @@ const items = [
     title: "Home",
     url: "/",
     icon: Home,
-    element: <App />,
   },
   {
     title: "Upload",
     url: "/upload",
     icon: FileUp,
-    element: <Upload />,
   },
-  // {
-  //   title: "Input",
-  //   url: "/input",
-  //   icon: File,
-  // },
+  {
+    title: "Input",
+    url: "/input",
+    icon: File,
+  },
 ];
 
 export function AppSidebar() {
