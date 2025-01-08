@@ -1,6 +1,7 @@
 import torch
 from transformers import DonutProcessor, VisionEncoderDecoderModel
 from paddleocr import PaddleOCR
+import datetime
 
 
 def loadModel():
@@ -12,7 +13,6 @@ def loadModel():
 
 def generateTextInImage(processor, model, input_image, task_prompt="<s_receipt>"):
     pixel_values = processor(input_image, return_tensors="pt").pixel_values
-    print("input pixel_values: ", pixel_values.shape)
     task_prompt = "<s_receipt>"
     decoder_input_ids = processor.tokenizer(
         task_prompt, add_special_tokens=False, return_tensors="pt"
@@ -91,11 +91,28 @@ def buildLookupTable(correct_names):
 
 
 def cleanJsonOutput(json_output, correct_names):
+    # Remove unnecessary fields
+    json_output.pop("telephone", None)
+    json_output.pop("tips", None)
+    json_output.pop("ignore", None)
+    json_output.pop("tax", None)
+
+    # Fix variable types
+    json_output["subtotal"] = float(json_output["subtotal"])
+    json_output["total"] = float(json_output["total"])
+
+    # Correct items
     items = json_output["line_items"]
     if type(items) != list:  # Only one item
+        items.pop("item_key", None)
         items["item_name"] = correct_names.get(items["item_name"])
+        items["item_value"] = float(items["item_value"])
+        items["item_quantity"] = int(items["item_quantity"])
     else:
         for item in items:
+            item.pop("item_key", None)
             item["item_name"] = correct_names.get(item["item_name"])
+            item["item_value"] = float(item["item_value"])
+            item["item_quantity"] = int(item["item_quantity"])
 
     return json_output
