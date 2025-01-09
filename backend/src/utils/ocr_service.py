@@ -96,23 +96,26 @@ def cleanJsonOutput(json_output, correct_names):
     json_output.pop("tips", None)
     json_output.pop("ignore", None)
     json_output.pop("tax", None)
+    json_output.pop("store_addr", None)
+    json_output.pop("time", None)
 
     # Fix variable types
     json_output["subtotal"] = float(json_output["subtotal"])
     json_output["total"] = float(json_output["total"])
 
-    # Correct items
-    items = json_output["line_items"]
-    if type(items) != list:  # Only one item
-        items.pop("item_key", None)
-        items["item_name"] = correct_names.get(items["item_name"])
-        items["item_value"] = float(items["item_value"])
-        items["item_quantity"] = int(items["item_quantity"])
-    else:
-        for item in items:
-            item.pop("item_key", None)
-            item["item_name"] = correct_names.get(item["item_name"])
-            item["item_value"] = float(item["item_value"])
-            item["item_quantity"] = int(item["item_quantity"])
+    # Covert time to JS accepted Date format
+    json_output["date"] = datetime.datetime.strptime(
+        json_output["date"], "%d/%m/%Y"
+    ).strftime("%Y-%m-%d")
+
+    # Convert line_items to list when only one item in line_items
+    if not isinstance(json_output["line_items"], list):
+        json_output["line_items"] = [json_output["line_items"]]
+
+    for item in json_output["line_items"]:
+        item.pop("item_key", None)
+        item["item_name"] = correct_names.get(item["item_name"])
+        item["item_value"] = float(item["item_value"])
+        item["item_quantity"] = int(item["item_quantity"])
 
     return json_output
