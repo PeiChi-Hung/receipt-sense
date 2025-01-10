@@ -1,7 +1,6 @@
 import torch
-from transformers import DonutProcessor, VisionEncoderDecoderModel
 from paddleocr import PaddleOCR
-import datetime
+from transformers import DonutProcessor, VisionEncoderDecoderModel
 
 
 def loadModel():
