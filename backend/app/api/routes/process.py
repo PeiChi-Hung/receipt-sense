@@ -1,27 +1,18 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
-from PIL import Image
 from io import BytesIO
-
+from fastapi import APIRouter, UploadFile
+from PIL import Image
 import numpy as np
-
-from src.utils.ocr_service import (
-    cleanJsonOutput,
-    generateOutputJson,
-    loadModel,
+from app.core.ocr_processor import (
     paddleScan,
+    cleanJsonOutput,
+    loadModel,
+    generateOutputJson,
 )
 
-
-app = FastAPI()
-
-
-@app.post("/chat")
-def chat(message: str):
-    return JSONResponse(content=message, status_code=200)
+router = APIRouter()
 
 
-@app.post("/upload")
+@router.post("/process")
 async def create_upload_image(file: UploadFile):
     # Read the image data from the file object
     contents = await file.read()
