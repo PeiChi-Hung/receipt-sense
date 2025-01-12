@@ -1,3 +1,4 @@
-const apiEndpoint = process.env.API_ENDPOINT;
+const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+console.log("API Endpoint:", apiEndpoint);
 
 export { apiEndpoint };

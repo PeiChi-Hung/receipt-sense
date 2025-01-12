@@ -1,5 +1,3 @@
-import { useState } from "react";
-import Preview from "./Preview";
 import {
   FileInput,
   FileUploader,
@@ -7,8 +5,13 @@ import {
   FileUploaderItem,
 } from "@/components/FileUploader";
 import { Button } from "@/components/ui/button";
-import { DropzoneOptions } from "react-dropzone";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import { CloudUpload } from "lucide-react";
+import { useState } from "react";
+import { DropzoneOptions } from "react-dropzone";
+import Preview from "./Preview";
+import { apiEndpoint } from "@/config";
 
 const Upload = () => {
   const [previewData, setPreviewData] = useState<any>(null);
@@ -19,28 +22,46 @@ const Upload = () => {
       "image/*": [".jpg", ".jpeg", ".png"],
     },
     multiple: true,
-    maxFiles: 1,
+    maxFiles: 2,
     maxSize: 1 * 1024 * 1024,
   } satisfies DropzoneOptions;
+
+  const processFileMutation = useMutation({
+    mutationFn: async (files: File[]) => {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      const { data } = await axios.post(`${apiEndpoint}/process`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Data:", data);
+      return data;
+    },
+    onSuccess: (data) => {
+      setPreviewData(data);
+    },
+    onError: (error: AxiosError) => {
+      console.error("Error processing files:", error.message);
+    },
+  });
+
+  const onsubmit = () => {
+    if (files) {
+      processFileMutation.mutate(files);
+    }
+  };
   return (
     <>
-      {previewData ? (
-        <div className="grid grid-cols-2 p-4">
-          <div className="p-4">
-            <h5>Upload</h5>
-          </div>
-          <div className="rounded-xl bg-muted/50 p-4">
-            <h5>Preview</h5>
-            <Preview />
-          </div>
-        </div>
-      ) : (
+      <div className="grid grid-cols-2 p-4">
         <div className="space-y-4 p-4">
           <h5>Upload</h5>
           <FileUploader
             value={files}
             onValueChange={setFiles}
             dropzoneOptions={dropzone}
+            reSelect={true}
           >
             <FileInput>
               <div className="flex aspect-video w-full flex-col items-center justify-center rounded-md border bg-background">
@@ -69,8 +90,22 @@ const Upload = () => {
               ))}
             </FileUploaderContent>
           </FileUploader>
+          <Button
+            type="submit"
+            className="h-8 w-fit"
+            onClick={onsubmit}
+            disabled={processFileMutation.isPending || files === null}
+          >
+            {processFileMutation.isPending ? "Processing..." : "Preview"}
+          </Button>
         </div>
-      )}
+        {previewData && (
+          <div className="rounded-xl bg-muted/50 p-4">
+            <h5>Preview</h5>
+            <Preview />
+          </div>
+        )}
+      </div>
     </>
   );
 };
