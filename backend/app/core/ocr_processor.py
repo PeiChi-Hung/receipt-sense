@@ -1,3 +1,4 @@
+import datetime
 import torch
 from paddleocr import PaddleOCR
 from transformers import DonutProcessor, VisionEncoderDecoderModel
@@ -101,6 +102,12 @@ def cleanJsonOutput(json_output, correct_names):
 
     if json_output["total"]:
         json_output["total"] = float(json_output["total"].replace("$", ""))
+
+    if json_output["date"]:
+        if datetime.datetime.strptime(json_output["date"], "%d/%m/%Y"):
+            json_output["date"] = datetime.datetime.strptime(
+                json_output["date"], "%d/%m/%Y"
+            ).strftime("%Y-%m-%d")
 
     # Convert line_items to list when only one item in line_items
     if not isinstance(json_output["line_items"], list):
