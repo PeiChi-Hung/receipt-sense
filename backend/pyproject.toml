@@ -13,6 +13,10 @@ uvicorn = "^0.34.0"
 fastapi = "^0.115.6"
 torch = "^2.5.1"
 python-multipart = "^0.0.20"
+sqlmodel = "^0.0.22"
+pydantic = "^2.10.5"
+paddlepaddle = "^2.6.2"
+numpy = "^2.2.1"
 
 
 [build-system]
