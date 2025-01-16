@@ -1,11 +1,12 @@
-import { z } from "zod";
+import InputForm from "@/components/InputForm";
+import { FormValues } from "@/types";
 
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-});
-
-const Preview = () => {
-  return <div>Preview</div>;
+const Preview = ({ previewData }: { previewData: Partial<FormValues> }) => {
+  return (
+    <div>
+      <InputForm previewValues={previewData} />
+    </div>
+  );
 };
 
 export default Preview;

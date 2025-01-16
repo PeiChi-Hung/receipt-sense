@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Popover,
@@ -28,35 +28,62 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { useEffect } from "react";
+import { Separator } from "./ui/separator";
 
 const formSchema = z.object({
   storeName: z.string().nonempty({ message: "Store name is required" }),
   date: z.date(),
-  category: z.string(),
-  itemName: z.string(),
-  itemValue: z.number(),
-  itemQuantity: z.number(),
+  category: z.string().optional(),
+  line_items: z.array(
+    z.object({
+      item_name: z.string(),
+      item_value: z.number(),
+      item_quantity: z.number(),
+    }),
+  ),
+  total: z.number(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 const defaultValues: Partial<FormValues> = {
   storeName: "",
-  category: "",
-  itemName: "",
-  itemValue: 0,
-  itemQuantity: 0,
+  line_items: [
+    {
+      item_name: "",
+      item_value: 0,
+      item_quantity: 0,
+    },
+  ],
 };
 
-const InputForm = () => {
+export default function InputForm({
+  previewValues,
+}: {
+  previewValues?: Partial<FormValues>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: previewValues ? previewValues : defaultValues,
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
+
+  const {
+    fields: itemFields,
+    append: itemAppend,
+    remove: itemRemove,
+  } = useFieldArray({
+    control: form.control,
+    name: "line_items",
+  });
+
+  useEffect(() => {
+    form.reset(previewValues);
+  }, [previewValues]);
 
   return (
     <Form {...form}>
@@ -151,57 +178,104 @@ const InputForm = () => {
           />
         </div>
 
-        {/* Items */}
-        <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-2">
-            <FormField
-              control={form.control}
-              name="itemName"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Store Name */}
-                  <FormLabel>Item Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {itemFields.map((field, index, array) => (
+          <div key={field.id} className="grid grid-cols-4 gap-4">
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name={`line_items.${index}.item_name`}
+                render={({ field }) => (
+                  <FormItem>
+                    {/* Item Name */}
+                    <FormLabel>Item Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name={`line_items.${index}.item_value`}
+                render={({ field }) => (
+                  <FormItem>
+                    {/* Item Value */}
+                    <FormLabel>Item Value</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name={`line_items.${index}.item_quantity`}
+                render={({ field }) => (
+                  <FormItem>
+                    {/* Item Quantity */}
+                    <FormLabel>Item Quantity</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className={array.length === 1 ? "hidden" : "mt-2 block w-full"}
+              onClick={() => itemRemove(index)}
+            >
+              Remove Item
+            </Button>
           </div>
-          <FormField
-            control={form.control}
-            name="itemValue"
-            render={({ field }) => (
-              <FormItem>
-                {/* Store Name */}
-                <FormLabel>Item Value</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="itemQuantity"
-            render={({ field }) => (
-              <FormItem>
-                {/* Store Name */}
-                <FormLabel>Item Quantity</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        ))}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="mt-2"
+          onClick={() =>
+            itemAppend({
+              item_name: "",
+              item_value: 0,
+              item_quantity: 0,
+            })
+          }
+        >
+          Add Item
+        </Button>
+        <Separator />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h6>Total</h6>
+            <div className="w-1/5">
+              <FormField
+                control={form.control}
+                name="total"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
         </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
-};
-
-export default InputForm;
+}

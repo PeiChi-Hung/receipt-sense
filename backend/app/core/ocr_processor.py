@@ -96,20 +96,18 @@ def cleanJsonOutput(json_output, correct_names):
     json_output.pop("tips", None)
     json_output.pop("ignore", None)
     json_output.pop("tax", None)
+    json_output.pop("store_addr", None)
+    json_output.pop("time", None)
+    json_output.pop("subtotal", None)
 
-    # Fix variable types
-    if json_output["subtotal"]:
-        json_output["subtotal"] = float(json_output["subtotal"])
+    if json_output["total"]:
+        json_output["total"] = float(json_output["total"].replace("$", ""))
 
-    if "$" in json_output["total"]:
-        json_output["total"] = json_output["total"].lstrip("$")
-    json_output["total"] = float(json_output["total"])
-
-    # Covert time to JS accepted Date format
-    # if json_output["date"]:
-    #     json_output["date"] = datetime.datetime.strptime(
-    #         json_output["date"], "%d/%m/%Y"
-    #     ).strftime("%Y-%m-%d")
+    if json_output["date"]:
+        if datetime.datetime.strptime(json_output["date"], "%d/%m/%Y"):
+            json_output["date"] = datetime.datetime.strptime(
+                json_output["date"], "%d/%m/%Y"
+            ).strftime("%Y-%m-%d")
 
     # Convert line_items to list when only one item in line_items
     if not isinstance(json_output["line_items"], list):
@@ -117,11 +115,14 @@ def cleanJsonOutput(json_output, correct_names):
 
     for item in json_output["line_items"]:
         item.pop("item_key", None)
-        item["item_name"] = correct_names.get(item["item_name"])
-        item["item_quantity"] = int(item["item_quantity"])
 
-        if "$" in item["item_value"]:
-            item["item_value"] = item["item_value"].lstrip("$")
-        item["item_value"] = float(item["item_value"])
+        if item["item_name"]:
+            item["item_name"] = correct_names.get(item["item_name"])
+
+        if item["item_value"]:
+            item["item_value"] = float(item["item_value"].replace("$", ""))
+
+        if item["item_quantity"]:
+            item["item_quantity"] = int(item["item_quantity"])
 
     return json_output
