@@ -43,7 +43,6 @@ const formSchema = z.object({
     }),
   ),
   total: z.number(),
-  subtotal: z.number(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -273,21 +272,6 @@ export default function InputForm({
                 )}
               />
             </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <h6>Subtotal</h6>
-            <FormField
-              control={form.control}
-              name="subtotal"
-              render={({ field }) => (
-                <FormItem className="w-1/5">
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
         </div>
         <Button type="submit">Submit</Button>

@@ -12,10 +12,13 @@ import { useState } from "react";
 import { DropzoneOptions } from "react-dropzone";
 import Preview from "./Preview";
 import { apiEndpoint } from "@/config";
+import { FormValues } from "@/types";
 
 const Upload = () => {
-  const [previewData, setPreviewData] = useState<any>(null);
-  const [files, setFiles] = useState<File[] | null>([]);
+  const [previewData, setPreviewData] = useState<Partial<FormValues> | null>(
+    null,
+  );
+  const [files, setFiles] = useState<File[] | null>(null);
 
   const dropzone = {
     accept: {
@@ -102,7 +105,7 @@ const Upload = () => {
         {previewData && (
           <div className="rounded-xl bg-muted/50 p-4">
             <h5>Preview</h5>
-            <Preview />
+            <Preview previewData={previewData} />
           </div>
         )}
       </div>
