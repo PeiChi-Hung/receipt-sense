@@ -4,6 +4,7 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import Upload from "@/pages/upload/Upload";
 import { Route, Routes } from "react-router";
 import Input from "@/pages/input/Input";
+import Login from "./pages/login/Login";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         </main>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/input" element={<Input />} />
         </Routes>

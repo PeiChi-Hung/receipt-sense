@@ -1,4 +1,4 @@
-import InputForm from "@/components/InputForm";
+import InputForm from "@/components/Forms/InputForm";
 import { FormValues } from "@/types";
 
 const Preview = ({ previewData }: { previewData: Partial<FormValues> }) => {

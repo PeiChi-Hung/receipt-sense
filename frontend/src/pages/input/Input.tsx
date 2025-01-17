@@ -1,4 +1,4 @@
-import InputForm from "@/components/InputForm";
+import InputForm from "@/components/Forms/InputForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Input = () => {
